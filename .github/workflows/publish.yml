@@ -1,0 +1,37 @@
+name: "Publish Apps"
+
+on:
+  push:
+    branches:
+      - "master"
+
+jobs:
+  build:
+    strategy:
+      matrix:
+        os: [ubuntu-latest, windows-latest, macos-latest]
+    runs-on: ${{ matrix.os }}
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+      - name: Setup Flutter
+        uses: subosito/flutter-action@v2
+        with:
+         flutter-version: '3.3.9'
+      - name: Install deps
+        run: flutter pub get
+      - name: Build Android App
+        if: ${{ matrix.os }} == "ubuntu-latest"
+        run: flutter build apk
+      - name: Build iOS App
+        if: ${{ matrix.os }} == "macos-latest"
+        run: flutter build apk
+      - name: Build Windows App
+        if: ${{ matrix.os }} == "windows-latest"
+        run: flutter build windows
+      - name: Build Mac App
+        if: ${{ matrix.os }} == "macos-latest"
+        run: flutter build macos
+      - name: Build Linux App
+        if: ${{ matrix.os }} == "ubuntu-latest"
+        run: flutter build linux

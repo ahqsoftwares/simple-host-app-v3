@@ -1,7 +1,7 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.example.simplehostmobile">
    <application
-        android:label="simplehostmobile"
+        android:label="Simple Host Mobile"
         android:name="${applicationName}"
         android:icon="@mipmap/ic_launcher">
         <activity
