@@ -17,7 +17,7 @@ jobs:
       - name: Setup Flutter
         uses: subosito/flutter-action@v2
         with:
-         flutter-version: '3.3.9'
+         channel: "stable"
       - name: Install deps
         run: flutter pub get
       - name: Build Android App
@@ -25,7 +25,7 @@ jobs:
         run: flutter build apk
       - name: Build iOS App
         if: ${{ matrix.os }} == "macos-latest"
-        run: flutter build apk
+        run: flutter build ios
       - name: Build Windows App
         if: ${{ matrix.os }} == "windows-latest"
         run: flutter build windows
