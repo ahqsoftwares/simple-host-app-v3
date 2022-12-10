@@ -26,7 +26,7 @@ jobs:
       - name: Install deps
         run: flutter pub get
       - name: Build Android App
-        if: runner.os == "Linux"
+        if: runner.os == 'Linux'
         run: flutter build apk
       - name: Build iOS App
         if: runner.os == 'macOS'
@@ -38,5 +38,5 @@ jobs:
         if: runner.os == 'macOS'
         run: flutter build macos
       - name: Build Linux App
-        if: runner.os == "Linux"
+        if: runner.os == 'Linux'
         run: flutter build linux
