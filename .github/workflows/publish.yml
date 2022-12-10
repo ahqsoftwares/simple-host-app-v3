@@ -19,6 +19,9 @@ jobs:
         with:
           distribution: 'temurin' # See 'Supported distributions' for available options
           java-version: '17'
+      - name: Ninja Setup
+        if: runner.os == 'Linux'
+        uses: seanmiddleditch/gha-setup-ninja@master
       - name: Setup Flutter
         uses: subosito/flutter-action@v2
         with:
@@ -34,9 +37,6 @@ jobs:
       - name: Build Windows App
         if: runner.os == 'Windows'
         run: flutter build windows
-      - name: Build Mac App
-        if: runner.os == 'macOS'
-        run: flutter build macos
       - name: Build Linux App
         if: runner.os == 'Linux'
         run: flutter build linux
