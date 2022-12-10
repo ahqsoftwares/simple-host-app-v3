@@ -26,17 +26,17 @@ jobs:
       - name: Install deps
         run: flutter pub get
       - name: Build Android App
-        if: ${{ matrix.os }} == "ubuntu-latest"
+        if: runner.os == "Linux"
         run: flutter build apk
       - name: Build iOS App
-        if: ${{ matrix.os }} == "macos-latest"
+        if: runner.os == 'macOS'
         run: flutter build ios
       - name: Build Windows App
-        if: ${{ matrix.os }} == "windows-latest"
+        if: runner.os == 'Windows'
         run: flutter build windows
       - name: Build Mac App
-        if: ${{ matrix.os }} == "macos-latest"
+        if: runner.os == 'macOS'
         run: flutter build macos
       - name: Build Linux App
-        if: ${{ matrix.os }} == "ubuntu-latest"
+        if: runner.os == "Linux"
         run: flutter build linux
