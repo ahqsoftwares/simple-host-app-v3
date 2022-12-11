@@ -53,13 +53,34 @@ jobs:
         if: runner.os == 'Linux'
         run: flutter build web
 
+      - name: zip win artifact
+        if: runner.os == 'Windows'
+        run: |
+          cd ./build/windows/runner/Release && powershell Compress-Archive ./* windows.zip
+
       - name: Zip Web Bundle
         if: runner.os == 'Linux'
         run: cd ./build/web && zip -r web.zip .
       
+      - name: Read yaml
+        id: yaml-data
+        uses: jbutcher5/read-yaml@main
+        with:
+          file: "./pubspec.yaml"
+          key-path: "['version']"
+
       - name: Release
         uses: ncipollo/release-action@v1
         if: runner.os == 'Linux'
         with:
-          tag: "v0.0.0"
+          draft: true
+          tag: "v${{ steps.yaml-data.outputs.data }}"
           artifacts: "build/linux/Release/bundle/linux.zip,build/web/web.zip,build/app/outputs/flutter-apk/app-release.apk"
+      
+      - name: Release
+        if: runner.os == 'Windows'
+        uses: ncipollo/release-action@v1
+        with:
+          draft: true
+          tag: "v${{ steps.yaml-data.outputs.data }}"
+          artifacts: "build/windows/runner/Release/windows.zip"
