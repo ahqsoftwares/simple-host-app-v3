@@ -52,10 +52,6 @@ jobs:
       - name: Build Web App
         if: runner.os == 'Linux'
         run: flutter build web
-      
-      - name: Zip Linux Bundle
-        if: runner.os == 'Linux'
-        run: cd ./build/linux/Release/bundle && zip -r linux.zip .
 
       - name: Zip Web Bundle
         if: runner.os == 'Linux'
