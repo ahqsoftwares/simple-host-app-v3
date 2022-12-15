@@ -51,23 +51,23 @@ jobs:
       - name: Build Windows App
         if: runner.os == 'Windows'
         run: flutter build windows
+
+      - name: Zip Win App
+        if: runner.os == 'Windows'
+        run: |
+          cd ./build/windows/runner/Release && powershell Compress-Archive ./* windows.zip
       
       - name: Build Linux App
         if: runner.os == 'Linux'
         run: flutter build linux
 
-      - name: List data
+      - name: Zip Linux App
         if: runner.os == 'Linux'
         run: cd ./build/linux/x64/release && zip -r linux.zip .
       
       - name: Build Web App
         if: runner.os == 'Linux'
         run: flutter build web
-
-      - name: zip win artifact
-        if: runner.os == 'Windows'
-        run: |
-          cd ./build/windows/runner/Release && powershell Compress-Archive ./* windows.zip
 
       - name: Zip Web Bundle
         if: runner.os == 'Linux'
