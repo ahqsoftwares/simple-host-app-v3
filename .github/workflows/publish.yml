@@ -58,7 +58,7 @@ jobs:
 
       - name: List data
         if: runner.os == 'Linux'
-        run: cd ./build/linux/x64 && ls
+        run: cd ./build/linux/x64/release && zip -r linux.zip .
       
       - name: Build Web App
         if: runner.os == 'Linux'
@@ -80,7 +80,7 @@ jobs:
           allowUpdates: true
           draft: true
           tag: "v${{ steps.yaml-data.outputs.data }}"
-          artifacts: "build/linux/Release/bundle/linux.zip,build/web/web.zip,build/app/outputs/flutter-apk/app-release.apk"
+          artifacts: "build/linux/x64/release/linux.zip,build/web/web.zip,build/app/outputs/flutter-apk/app-release.apk"
       
       - name: Release
         if: runner.os == 'Windows'
