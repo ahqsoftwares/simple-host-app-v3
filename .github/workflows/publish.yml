@@ -32,9 +32,6 @@ jobs:
           file: "./pubspec.yaml"
           key-path: '["version"]'
 
-      - name: Spit Value
-        run: "echo ${{ steps.yaml-data.outputs.data }}"
-
       - name: Setup Flutter
         uses: subosito/flutter-action@v2
         with:
@@ -58,6 +55,10 @@ jobs:
       - name: Build Linux App
         if: runner.os == 'Linux'
         run: flutter build linux
+
+      - name: List data
+        if: runner.os == 'Linux'
+        run: cd ./build && ls
       
       - name: Build Web App
         if: runner.os == 'Linux'
