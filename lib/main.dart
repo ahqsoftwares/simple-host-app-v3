@@ -1,6 +1,4 @@
 import "package:flutter/material.dart";
-//import "package:http/http.dart" as http;
-import 'package:rx_storage/rx_storage.dart' as store;
 
 void main() {
   if (true == true) {

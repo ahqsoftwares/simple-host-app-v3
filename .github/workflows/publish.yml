@@ -58,7 +58,7 @@ jobs:
 
       - name: List data
         if: runner.os == 'Linux'
-        run: cd ./build/linux && ls
+        run: cd ./build/linux/x64 && ls
       
       - name: Build Web App
         if: runner.os == 'Linux'
