@@ -1,11 +1,11 @@
 {
-    "name": "simplehostmobile",
-    "short_name": "simplehostmobile",
+    "name": "Simple Host V3",
+    "short_name": "simplehost",
     "start_url": ".",
     "display": "standalone",
     "background_color": "#0175C2",
     "theme_color": "#0175C2",
-    "description": "A new Flutter project.",
+    "description": "The Simple Host Web Dashboard",
     "orientation": "portrait-primary",
     "prefer_related_applications": false,
     "icons": [
