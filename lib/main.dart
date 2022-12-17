@@ -1,10 +1,12 @@
 import "package:flutter/material.dart";
 import 'package:flutter/services.dart';
 
+import 'components/database.dart';
 import "components/state.dart";
 import "components/loading.dart";
 
 void main() {
+  init();
   WidgetsFlutterBinding.ensureInitialized();
 
   SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp])

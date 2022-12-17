@@ -14,7 +14,7 @@
   <link rel="apple-touch-icon" href="icons/Icon-192.png">
 
   <!-- Favicon -->
-  <link rel="icon" type="image/png" href="favicon.png"/>
+  <link rel="icon" id="favicon" type="image/png" href="dark.png"/>
 
   <title>Panel - Simple Host</title>
   <link rel="manifest" href="manifest.json">
@@ -54,6 +54,17 @@
       }
     }
   </style>
+  <script defer>
+    const favicon = document.getElementById("favicon");
+
+    setInterval(() => {
+      if (window.matchMedia("(prefers-color-scheme: dark)").matches) {
+        favicon.setAttribute("href", "dark.png");
+      } else {
+        favicon.setAttribute("href", "light.png");
+      }
+    }, 5000);
+  </script>
 
   <script>
     // The value below is injected by flutter build, do not touch.
