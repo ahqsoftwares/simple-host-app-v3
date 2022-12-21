@@ -102,7 +102,7 @@ class _MainState extends State<Main> {
                     unselectedItemColor: Colors.white,
                     items: [
                       BottomNavigationBarItem(
-                        icon: const Icon(Icons.storage_outlined),
+                        icon: const Icon(Icons.storage_rounded),
                         label: "Servers",
                         backgroundColor: Colors.red[600],
                       ),
