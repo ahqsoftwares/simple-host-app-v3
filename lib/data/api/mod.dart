@@ -1,4 +1,5 @@
-import "package:http/http.dart";
+import 'package:flutter/foundation.dart';
+import "package:http/http.dart" as http;
 import "../../components/database.dart";
 
 List<Function> callbacks = [];
@@ -23,6 +24,10 @@ void changeLoggedInStatus(bool status) {
 }
 
 Future<bool> verifyExisting() async {
+  if (kIsWeb) {
+    host = "simple-host-core.dfshbdgfbgfnfghgndbfgr.repl.co";
+  }
+
   userId = getData("x-uid");
   password = getData("x-password");
 
@@ -39,7 +44,8 @@ void setUser(String uid, String pwd) {
 }
 
 Future<bool> verify() async {
-  await get(
+  await http
+      .get(
     Uri(host: host, scheme: "https", path: "client/"),
     headers: Map<String, String>.from(
       {
@@ -47,7 +53,8 @@ Future<bool> verify() async {
         "x-pwd": password,
       },
     ),
-  ).then((response) {
+  )
+      .then((response) {
     if (response.statusCode == 200) {
       changeLoggedInStatus(true);
     } else {
