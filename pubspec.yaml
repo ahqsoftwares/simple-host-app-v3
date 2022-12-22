@@ -41,7 +41,6 @@ dependencies:
   responsive_framework: ^0.2.0
   shared_preferences: ^2.0.15
   loading_animation_widget: ^1.2.0+4
-  google_mobile_ads: ^2.3.0
 
 dev_dependencies:
   flutter_test:
