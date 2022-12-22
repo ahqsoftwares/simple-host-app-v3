@@ -26,8 +26,6 @@ void changeLoggedInStatus(bool status) {
 Future<bool> verifyExisting() async {
   if (kIsWeb) {
     host = "simple-host-core.dfshbdgfbgfnfghgndbfgr.repl.co";
-  } else if (defaultTargetPlatform == TargetPlatform.android) {
-    host = "simple-host-core.dfshbdgfbgfnfghgndbfgr.repl.co";
   }
 
   userId = getData("x-uid");
@@ -46,6 +44,7 @@ void setUser(String uid, String pwd) {
 }
 
 Future<bool> verify() async {
+  print(''''$userId, $password''');
   await http
       .get(
     Uri(host: host, scheme: "https", path: "client/"),
@@ -62,7 +61,7 @@ Future<bool> verify() async {
     } else {
       changeLoggedInStatus(false);
     }
-  }).catchError((_) {
+  }).catchError((e) {
     changeLoggedInStatus(false);
   });
 

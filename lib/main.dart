@@ -33,8 +33,8 @@ void useAds(AdRequest request) {
 */
 
 void main() {
-  init();
   WidgetsFlutterBinding.ensureInitialized();
+  init();
 
   //if (defaultTargetPlatform == TargetPlatform.android) {
   //MobileAds.instance.initialize();
