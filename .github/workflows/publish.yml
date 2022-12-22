@@ -63,7 +63,7 @@ jobs:
 
       - name: Zip Linux App
         if: runner.os == 'Linux'
-        run: cd ./build/linux/x64/release/build && zip -r linux.zip .
+        run: cd ./build/linux && zip -r linux.zip .
 
       - name: Release
         uses: ncipollo/release-action@v1
@@ -72,7 +72,7 @@ jobs:
           allowUpdates: true
           draft: true
           tag: "v${{ steps.yaml-data.outputs.data }}"
-          artifacts: "build/linux/x64/release/build/linux.zip,build/app/outputs/flutter-apk/app-release.apk"
+          artifacts: "build/linux/linux.zip,build/app/outputs/flutter-apk/app-release.apk"
       
       - name: Release
         if: runner.os == 'Windows'
