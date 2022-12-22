@@ -26,6 +26,8 @@ void changeLoggedInStatus(bool status) {
 Future<bool> verifyExisting() async {
   if (kIsWeb) {
     host = "simple-host-core.dfshbdgfbgfnfghgndbfgr.repl.co";
+  } else if (defaultTargetPlatform == TargetPlatform.android) {
+    host = "simple-host-core.dfshbdgfbgfnfghgndbfgr.repl.co";
   }
 
   userId = getData("x-uid");
