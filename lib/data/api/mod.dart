@@ -44,7 +44,6 @@ void setUser(String uid, String pwd) {
 }
 
 Future<bool> verify() async {
-  print(''''$userId, $password''');
   await http
       .get(
     Uri(host: host, scheme: "https", path: "client/"),

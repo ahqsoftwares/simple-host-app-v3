@@ -34,7 +34,7 @@ void registerBuild(Function callback) {
   callbacks.add(callback);
 }
 
-void setDataState(String key, String value) {
+void setDataState(String key, dynamic value) {
   manager.setState(key, value);
   for (var function in callbacks) {
     function(manager.getAll());

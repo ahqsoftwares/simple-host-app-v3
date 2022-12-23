@@ -2,6 +2,10 @@ import "package:flutter/material.dart";
 import 'package:flutter/services.dart';
 import 'package:simplehostmobile/pages/login.dart';
 
+import "pages/account.dart";
+import "pages/servers.dart";
+import "pages/settings.dart";
+
 import "data/api/mod.dart";
 import 'components/database.dart';
 import "components/state.dart";
@@ -85,6 +89,7 @@ class _MainState extends State<Main> {
 
   @override
   Widget build(BuildContext context) {
+    precacheImage(const AssetImage("assets/bg.png"), context);
     return authenticated == 0
         ? const Loading(key: Key("Loading"))
         : authenticated == 1
@@ -94,10 +99,14 @@ class _MainState extends State<Main> {
                 title: "Simple Host",
                 theme: ThemeData.light(),
                 home: Scaffold(
-                  body: Text(current.toString()),
+                  body: current == 0
+                      ? const Servers()
+                      : current == 1
+                          ? const Account()
+                          : const Settings(),
                   bottomNavigationBar: BottomNavigationBar(
                     type: BottomNavigationBarType.fixed,
-                    backgroundColor: const Color.fromRGBO(0, 23, 31, 1),
+                    backgroundColor: const Color.fromRGBO(0, 0, 0, 0.905),
                     selectedItemColor: Colors.cyan,
                     unselectedItemColor: Colors.white,
                     items: [

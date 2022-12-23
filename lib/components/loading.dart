@@ -32,39 +32,40 @@ class _LoadingState extends State<Loading> {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-        debugShowCheckedModeBanner: false,
-        title: "Simple Host V3",
-        theme: theme(),
-        home: Scaffold(
-          body: Container(
-            alignment: Alignment.center,
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              crossAxisAlignment: CrossAxisAlignment.center,
-              children: [
-                Container(
-                  margin: const EdgeInsets.all(10),
-                  width: 200,
-                  height: 200,
-                  decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(50),
-                    image: DecorationImage(
-                      image: dark
-                          ? const AssetImage("assets/dark.png")
-                          : const AssetImage("assets/light.png"),
-                      fit: BoxFit.cover,
-                    ),
+      debugShowCheckedModeBanner: false,
+      title: "Simple Host V3",
+      theme: theme(),
+      home: Scaffold(
+        body: Container(
+          alignment: Alignment.center,
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: [
+              Container(
+                margin: const EdgeInsets.all(10),
+                width: 200,
+                height: 200,
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(50),
+                  image: DecorationImage(
+                    image: dark
+                        ? const AssetImage("assets/dark.png")
+                        : const AssetImage("assets/light.png"),
+                    fit: BoxFit.cover,
                   ),
                 ),
-                show
-                    ? LoadingAnimationWidget.prograssiveDots(
-                        color: const Color.fromRGBO(0, 168, 232, 1),
-                        size: 200,
-                      )
-                    : Container(),
-              ],
-            ),
+              ),
+              show
+                  ? LoadingAnimationWidget.prograssiveDots(
+                      color: const Color.fromRGBO(0, 168, 232, 1),
+                      size: 200,
+                    )
+                  : Container(),
+            ],
           ),
-        ));
+        ),
+      ),
+    );
   }
 }
