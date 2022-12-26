@@ -45,6 +45,13 @@ jobs:
       - name: Build vite
         run: cd docs && npm run build
 
+      - name: Apply target
+        uses: w9jds/firebase-action@master
+        with:
+          args: target:apply hosting simple-host-api downloads-74868
+        env:
+          FIREBASE_TOKEN: ${{ secrets.FIREBASE_TOKEN }}
+
       - name: Deploy to hosting
         uses: FirebaseExtended/action-hosting-deploy@v0
         with:
