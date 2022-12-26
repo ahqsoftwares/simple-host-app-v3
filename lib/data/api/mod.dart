@@ -2,6 +2,8 @@ import 'package:flutter/foundation.dart';
 import "package:http/http.dart" as http;
 import "../../components/database.dart";
 
+import "servers.dart";
+
 List<Function> callbacks = [];
 
 String userId = "";
@@ -21,6 +23,13 @@ void changeLoggedInStatus(bool status) {
   for (var element in callbacks) {
     element(status);
   }
+}
+
+Future<List<Map<String, dynamic>>> fetchServers() async {
+  if (!loggedIn) {
+    throw ErrorSummary("User is not logged in!");
+  }
+  return await getServers(userId, password, host);
 }
 
 Future<bool> verifyExisting() async {

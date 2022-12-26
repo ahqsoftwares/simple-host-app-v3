@@ -1,3 +1,8 @@
+import 'dart:async';
+import 'package:flutter/foundation.dart';
+
+import "../data/api/mod.dart";
+
 class StateManager {
   Map<String, dynamic> state = {};
 
@@ -5,7 +10,7 @@ class StateManager {
     state.update(
       key,
       (value) => value,
-      ifAbsent: () => null,
+      ifAbsent: () => value,
     );
   }
 
@@ -26,18 +31,37 @@ class StateManager {
   }
 }
 
+int uid = 0;
+
 var manager = StateManager();
 
-var callbacks = <Function>[];
+var callbacks = [];
 
-void registerBuild(Function callback) {
-  callbacks.add(callback);
+void state() {
+  Timer.periodic(const Duration(seconds: kIsWeb ? 8 : 5), (_) async {
+    try {
+      var data = await fetchServers();
+      setDataState("user-servers", data);
+    } catch (_) {}
+  });
+}
+
+int registerBuild(Function callback) {
+  callbacks.add({"call": callback, "uid": uid + 1});
+  uid += 1;
+  return uid;
+}
+
+void unregisterBuild(int buildId) {
+  callbacks.retainWhere((element) => element["uid"] != buildId);
 }
 
 void setDataState(String key, dynamic value) {
   manager.setState(key, value);
+
+  var data = manager.getAll();
   for (var function in callbacks) {
-    function(manager.getAll());
+    function["call"](data);
   }
 }
 

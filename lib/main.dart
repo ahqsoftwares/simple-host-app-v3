@@ -39,6 +39,7 @@ void useAds(AdRequest request) {
 void main() {
   WidgetsFlutterBinding.ensureInitialized();
   init();
+  state();
 
   //if (defaultTargetPlatform == TargetPlatform.android) {
   //MobileAds.instance.initialize();
@@ -68,7 +69,6 @@ class _MainState extends State<Main> {
   @override
   void initState() {
     super.initState();
-    registerBuild((data) {});
 
     updateMe((online) {
       int auth = 0;

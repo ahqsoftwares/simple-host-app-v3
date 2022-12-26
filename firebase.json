@@ -1,5 +1,6 @@
 {
-  "hosting": {
+  "hosting": [{
+    "target": "simple-host-api",
     "public": "build/web",
     "ignore": [
       "firebase.json",
@@ -12,5 +13,19 @@
         "destination": "/index.html"
       }
     ]
-  }
+  }, {
+    "target": "downloads-74868",
+    "public": "docs/dist",
+    "ignore": [
+      "firebase.json",
+      "**/.*",
+      "**/node_modules/**"
+    ],
+    "rewrites": [
+      {
+        "source": "**",
+        "destination": "/index.html"
+      }
+    ]
+  }]
 }

@@ -1,7 +1,8 @@
-import 'dart:ui';
+import 'dart:math';
 
 import "package:flutter/material.dart";
 
+import "../components/state.dart";
 import "../components/design.dart";
 
 class Servers extends StatefulWidget {
@@ -12,32 +13,66 @@ class Servers extends StatefulWidget {
 }
 
 class ServersState extends State<Servers> {
+  int limit = getDataState("user-limit", false) == null
+      ? 0
+      : getDataState("user-limit", false)!.length;
+
+  int count = getDataState("user-servers", false) == null
+      ? 0
+      : getDataState("user-servers", false)!.length;
+
+  int uid = 0;
+
+  @override
+  void initState() {
+    super.initState();
+    int uID = registerBuild((Map<dynamic, dynamic> data) {
+      setState(() {
+        count = data["user-servers"].length;
+        limit = Random().nextBool() ? 10 : 0;
+      });
+    });
+
+    setState(() {
+      uid = uID;
+    });
+  }
+
+  @override
+  void dispose() {
+    super.dispose();
+
+    unregisterBuild(uid);
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       body: Container(
         decoration: boxDecoration(),
       ),
-      floatingActionButton: FloatingActionButton.extended(
-        onPressed: () {
-          Navigator.of(context).push(
-            MaterialPageRoute(
-              builder: (_) => const CreateServer(),
-            ),
-          );
-        },
-        backgroundColor: Colors.blue[900],
-        icon: const Icon(Icons.add),
-        label: Text(
-          (MediaQuery.of(context).size.width > 300)
-              ? "Create a server"
-              : "Create",
-          style: const TextStyle(
-            fontFamily: "Arial",
-            fontWeight: FontWeight.w500,
-          ),
-        ),
-      ),
+      floatingActionButton: count < limit
+          ? FloatingActionButton.extended(
+              onPressed: () {
+                Navigator.of(context).push(
+                  MaterialPageRoute(
+                    builder: (_) => const CreateServer(),
+                  ),
+                );
+              },
+              backgroundColor: Colors.blue[900],
+              icon: const Icon(Icons.add),
+              label: Text(
+                (MediaQuery.of(context).size.width > 300)
+                    ? "Create a server"
+                    : "Create",
+                style: const TextStyle(
+                  fontFamily: "Arial",
+                  fontWeight: FontWeight.w500,
+                ),
+              ),
+            )
+          : null,
     );
   }
 }

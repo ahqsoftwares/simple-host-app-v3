@@ -23,6 +23,11 @@ jobs:
         if: runner.os == 'Linux'
         uses: seanmiddleditch/gha-setup-ninja@master
 
+      - name: Setup Node
+        uses: actions/setup-node@v3
+        with:
+          node-version: current
+
       - name: Setup Flutter
         uses: subosito/flutter-action@v2
         with:
@@ -31,8 +36,14 @@ jobs:
       - name: Install deps
         run: flutter pub get
 
+      - name: Install deps (v2)
+        run: cd docs && npm install
+
       - name: Build to js
         run: flutter build web
+
+      - name: Build vite
+        run: cd docs && npm run build
 
       - name: Deploy to hosting
         uses: FirebaseExtended/action-hosting-deploy@v0
