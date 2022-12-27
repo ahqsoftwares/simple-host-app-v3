@@ -1,6 +1,7 @@
-import 'dart:math';
+import 'dart:async';
 
 import "package:flutter/material.dart";
+import 'package:simplehostmobile/data/api/mod.dart';
 
 import "../components/state.dart";
 import "../components/design.dart";
@@ -15,7 +16,7 @@ class Servers extends StatefulWidget {
 class ServersState extends State<Servers> {
   int limit = getDataState("user-limit", false) == null
       ? 0
-      : getDataState("user-limit", false)!.length;
+      : getDataState("user-limit", false)!["slots"];
 
   int count = getDataState("user-servers", false) == null
       ? 0
@@ -26,10 +27,11 @@ class ServersState extends State<Servers> {
   @override
   void initState() {
     super.initState();
+
     int uID = registerBuild((Map<dynamic, dynamic> data) {
       setState(() {
         count = data["user-servers"].length;
-        limit = Random().nextBool() ? 10 : 0;
+        limit = data["user-limit"]["slots"];
       });
     });
 
@@ -50,6 +52,12 @@ class ServersState extends State<Servers> {
     return Scaffold(
       body: Container(
         decoration: boxDecoration(),
+        width: MediaQuery.of(context).size.width,
+        height: MediaQuery.of(context).size.height,
+        child: Text(
+          '$count servers',
+          style: const TextStyle(color: Colors.white),
+        ),
       ),
       floatingActionButton: count < limit
           ? FloatingActionButton.extended(
@@ -85,8 +93,32 @@ class CreateServer extends StatefulWidget {
 }
 
 class CreateServerState extends State<CreateServer> {
+  double width = 0;
+  double height = 0;
+  String submitText = "Submit";
+  String servername = "";
+
+  @override
+  void initState() {
+    super.initState();
+    setState(() {
+      width = (MediaQueryData.fromWindow(WidgetsBinding.instance.window)
+                  .size
+                  .width *
+              80) /
+          100;
+      height = (MediaQueryData.fromWindow(WidgetsBinding.instance.window)
+                  .size
+                  .height *
+              80) /
+          100;
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
+    final GlobalKey<FormState> formKey = GlobalKey<FormState>();
+
     return Scaffold(
       bottomNavigationBar: Container(
         height: 50,
@@ -125,8 +157,92 @@ class CreateServerState extends State<CreateServer> {
           image: DecorationImage(
               image: AssetImage("assets/bg.png"), fit: BoxFit.fill),
         ),
-        child: Column(
-          children: [Container()],
+        child: Form(
+          key: formKey,
+          child: Column(
+            children: [
+              TextFormField(
+                autocorrect: false,
+                decoration: InputDecoration(
+                    labelText: "Server Name",
+                    icon: width >= 250
+                        ? const Icon(
+                            Icons.storage,
+                            color: Colors.white,
+                          )
+                        : null,
+                    iconColor: Colors.white,
+                    fillColor: Colors.white,
+                    focusColor: Colors.white,
+                    hoverColor: Colors.white,
+                    prefixIconColor: Colors.white,
+                    suffixIconColor: Colors.white),
+                initialValue: servername,
+                onSaved: (value) {
+                  setState(() {
+                    servername = value as String;
+                  });
+                },
+                validator: (value) {
+                  if (value == null) {
+                    return "Please enter a server name";
+                  } else if (value.length > 10) {
+                    return "Please be short";
+                  }
+                  return null;
+                },
+              ),
+              Container(
+                height: 80,
+              ),
+              ElevatedButton(
+                onPressed: () {
+                  if (formKey.currentState!.validate()) {
+                    formKey.currentState!.save();
+                    Timer(const Duration(milliseconds: 200), () {
+                      setState(() {
+                        submitText = "Checking";
+                      });
+                      makeServer(servername).then((_) {
+                        setState(() {
+                          submitText = "Done!";
+                        });
+                        Navigator.pop(context);
+                      }).catchError((_) {
+                        setState(() {
+                          submitText = "Error";
+                        });
+                        Timer(const Duration(seconds: 2), () {
+                          setState(() {
+                            submitText = "Submit";
+                          });
+                        });
+                      });
+                    });
+                  }
+                },
+                style: ButtonStyle(
+                  padding: MaterialStateProperty.all(
+                    const EdgeInsets.symmetric(
+                      vertical: 20,
+                      horizontal: 60,
+                    ),
+                  ),
+                  backgroundColor: MaterialStateProperty.all(
+                      (submitText != "Submit" && submitText != "Checking")
+                          ? Colors.red[500]
+                          : Colors.blue),
+                ),
+                child: SizedBox(
+                  width: 300,
+                  child: Text(
+                    submitText,
+                    textAlign: TextAlign.center,
+                  ),
+                ),
+              )
+            ],
+          ),
         ),
       ),
     );

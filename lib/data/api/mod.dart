@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:flutter/foundation.dart';
 import "package:http/http.dart" as http;
 import "../../components/database.dart";
@@ -23,6 +25,26 @@ void changeLoggedInStatus(bool status) {
   for (var element in callbacks) {
     element(status);
   }
+}
+
+Future<dynamic> fetchUser() async {
+  if (!loggedIn) {
+    throw ErrorSummary("User is not logged in!");
+  }
+  return await http.get(
+    Uri(
+      host: host,
+      path: "client/me",
+      scheme: "https",
+    ),
+    headers: {"x-uid": userId, "x-pwd": password},
+  ).then((response) {
+    return jsonDecode(response.body);
+  }).catchError((_) {});
+}
+
+Future<void> makeServer(String name) async {
+  return await createServer(userId, password, host, name);
 }
 
 Future<List<Map<String, dynamic>>> fetchServers() async {

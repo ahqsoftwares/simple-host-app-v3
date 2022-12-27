@@ -20,31 +20,80 @@ Future<List<Map<String, dynamic>>> getServers(
     var payload = jsonDecode(response.body) as List;
 
     for (var data in payload) {
-      var status = data["State"];
+      var status = data["state"];
 
-      if (status["Running"]) {
+      if (status["running"]) {
         status = "Running";
-      } else if (status["Paused"]) {
+      } else if (status["paused"]) {
         status = "Paused";
-      } else if (status["Restarting"]) {
+      } else if (status["restarting"]) {
         status = "Restarting";
       } else if (status["OOMKilled"] ||
-          status["Dead"] ||
-          status["Status"] == "created") {
+          status["dead"] ||
+          status["status"] == "created") {
         status = "Stopped";
       } else {
         status = "Unknown";
       }
       datas.add(
         {
-          "name": (data["Name"] as String).replaceFirst("/", ""),
+          "name": (data["name"] as String).replaceFirst("/", ""),
           "status": status,
+          "resources": {
+            "cpu": data["resources"]["cpu"] as String,
+            "ram": data["resources"]["ram"] as String,
+            "ramUsage": data["resources"]["ramUsage"] as String,
+            "network": data["resources"]["network"] as String
+          }
         },
       );
     }
 
     return datas;
   }).catchError((_) {
-    return [{}] as dynamic;
+    return [{}] as List<Map<String, dynamic>>;
+  });
+}
+
+Future<void> createServer(
+    String uid, String pwd, String host, String servername) async {
+  await post(
+    Uri(
+      host: host,
+      path: "client/server/new",
+      scheme: "https",
+    ),
+    headers: {
+      "x-uid": uid,
+      "x-pwd": pwd,
+      "x-servername": servername,
+    },
+  ).then((value) {
+    if (value.statusCode != 200) {
+      throw Error();
+    }
+  }).catchError((_) {
+    throw Error();
+  });
+}
+
+Future<void> deleteServer(
+    String uid, String pwd, String host, String servername) async {
+  await delete(
+    Uri(
+      host: host,
+      path: "client/server/delete",
+    ),
+    headers: {
+      "x-uid": uid,
+      "x-pwd": pwd,
+      "x-servername": servername,
+    },
+  ).then((value) {
+    if (value.statusCode != 200) {
+      throw Error();
+    }
+  }).catchError((_) {
+    throw Error();
   });
 }

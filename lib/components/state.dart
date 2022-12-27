@@ -37,11 +37,14 @@ var manager = StateManager();
 
 var callbacks = [];
 
-void state() {
-  Timer.periodic(const Duration(seconds: kIsWeb ? 8 : 5), (_) async {
+Future<void> state() async {
+  Timer.periodic(const Duration(seconds: kIsWeb ? 8 : 2), (_) async {
     try {
       var data = await fetchServers();
+      var user = await fetchUser();
+
       setDataState("user-servers", data);
+      setDataState("user-limit", user);
     } catch (_) {}
   });
 }
@@ -61,7 +64,9 @@ void setDataState(String key, dynamic value) {
 
   var data = manager.getAll();
   for (var function in callbacks) {
-    function["call"](data);
+    try {
+      function["call"](data);
+    } catch (_) {}
   }
 }
 
