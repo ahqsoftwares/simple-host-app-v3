@@ -1,4 +1,7 @@
 # Miscellaneous
+node_modules
+package.json
+package-lock.json
 *.class
 *.log
 *.pyc
