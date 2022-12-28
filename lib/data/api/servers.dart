@@ -66,6 +66,7 @@ Future<void> createServer(
       "x-uid": uid,
       "x-pwd": pwd,
       "x-servername": servername,
+      "x-us": servername,
     },
   ).then((value) {
     if (value.statusCode != 200) {
@@ -88,6 +89,7 @@ Future<void> deleteServer(
       "x-uid": uid,
       "x-pwd": pwd,
       "x-servername": servername,
+      "x-us": servername,
     },
   ).then((value) {
     if (value.statusCode != 200) {
