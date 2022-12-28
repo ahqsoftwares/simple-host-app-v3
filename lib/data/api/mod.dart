@@ -47,6 +47,10 @@ Future<void> makeServer(String name) async {
   return await createServer(userId, password, host, name);
 }
 
+Future<void> rmServer(String name) async {
+  return await deleteServer(userId, password, host, name);
+}
+
 Future<List<Map<String, dynamic>>> fetchServers() async {
   if (!loggedIn) {
     throw ErrorSummary("User is not logged in!");

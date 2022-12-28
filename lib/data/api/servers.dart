@@ -48,7 +48,6 @@ Future<List<Map<String, dynamic>>> getServers(
         },
       );
     }
-
     return datas;
   }).catchError((_) {
     return [{}] as List<Map<String, dynamic>>;
@@ -83,6 +82,7 @@ Future<void> deleteServer(
     Uri(
       host: host,
       path: "client/server/delete",
+      scheme: "https",
     ),
     headers: {
       "x-uid": uid,

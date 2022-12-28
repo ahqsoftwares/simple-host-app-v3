@@ -2,6 +2,7 @@ import 'dart:async';
 
 import "package:flutter/material.dart";
 import 'package:simplehostmobile/data/api/mod.dart';
+import 'package:simplehostmobile/data/api/servers.dart';
 
 import "../components/state.dart";
 import "../components/design.dart";
@@ -54,9 +55,37 @@ class ServersState extends State<Servers> {
         decoration: boxDecoration(),
         width: MediaQuery.of(context).size.width,
         height: MediaQuery.of(context).size.height,
-        child: Text(
-          '$count servers',
-          style: const TextStyle(color: Colors.white),
+        child: ListView.builder(
+          itemCount: count,
+          itemBuilder: (context, index) {
+            try {
+              var items = getDataState("user-servers", false);
+              var item = items[index];
+
+              return InkWell(
+                onTap: () {
+                  rmServer(item["name"].toString()).then((value) async {
+                    await state();
+                    print("Good to delete");
+                  });
+                },
+                child: Text(
+                  item["name"].toString(),
+                  style: const TextStyle(
+                    color: Colors.white,
+                  ),
+                ),
+              );
+            } catch (_) {
+              return const InkWell();
+            }
+          },
+          /*children: [
+            Text(
+              '$count servers',
+              style: const TextStyle(color: Colors.white),
+            ),
+          ],*/
         ),
       ),
       floatingActionButton: count < limit
@@ -98,6 +127,8 @@ class CreateServerState extends State<CreateServer> {
   String submitText = "Submit";
   String servername = "";
 
+  bool skip = false;
+
   @override
   void initState() {
     super.initState();
@@ -120,36 +151,38 @@ class CreateServerState extends State<CreateServer> {
     final GlobalKey<FormState> formKey = GlobalKey<FormState>();
 
     return Scaffold(
-      bottomNavigationBar: Container(
-        height: 50,
-        decoration: const BoxDecoration(
-          color: Color.fromRGBO(0, 0, 0, 0.9),
-        ),
-        child: InkWell(
-          onTap: () {
-            Navigator.of(context).pop();
-          },
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.center,
-            crossAxisAlignment: CrossAxisAlignment.center,
-            children: const [
-              Padding(
-                padding: EdgeInsets.fromLTRB(0, 0, 5, 0),
-                child: Icon(
-                  Icons.arrow_back,
-                  color: Colors.white,
+      bottomNavigationBar: !skip
+          ? Container(
+              height: 50,
+              decoration: const BoxDecoration(
+                color: Color.fromRGBO(0, 0, 0, 0.9),
+              ),
+              child: InkWell(
+                onTap: () {
+                  Navigator.of(context).pop();
+                },
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: const [
+                    Padding(
+                      padding: EdgeInsets.fromLTRB(0, 0, 5, 0),
+                      child: Icon(
+                        Icons.arrow_back,
+                        color: Colors.white,
+                      ),
+                    ),
+                    Text(
+                      "Back",
+                      style: TextStyle(
+                        color: Colors.white,
+                      ),
+                    ),
+                  ],
                 ),
               ),
-              Text(
-                "Back",
-                style: TextStyle(
-                  color: Colors.white,
-                ),
-              ),
-            ],
-          ),
-        ),
-      ),
+            )
+          : null,
       body: Container(
         width: MediaQuery.of(context).size.width,
         height: MediaQuery.of(context).size.height,
@@ -186,8 +219,21 @@ class CreateServerState extends State<CreateServer> {
                 validator: (value) {
                   if (value == null) {
                     return "Please enter a server name";
-                  } else if (value.length > 10) {
+                  } else if (value.contains(" ")) {
+                    return "No spaces";
+                  } else if (value.length > 16) {
                     return "Please be short";
+                  }
+                  bool red = false;
+                  for (var char = 0; char < value.length; char++) {
+                    String chh = value[char];
+                    if (chh.toLowerCase() == chh.toUpperCase()) {
+                      red = true;
+                    }
+                  }
+
+                  if (red) {
+                    return "Only letter are allowed!";
                   }
                   return null;
                 },
@@ -198,16 +244,24 @@ class CreateServerState extends State<CreateServer> {
               ElevatedButton(
                 onPressed: () {
                   if (formKey.currentState!.validate()) {
+                    setState(() {
+                      skip = true;
+                    });
                     formKey.currentState!.save();
                     Timer(const Duration(milliseconds: 200), () {
                       setState(() {
                         submitText = "Checking";
                       });
-                      makeServer(servername).then((_) {
+                      makeServer(servername).then((_) async {
                         setState(() {
                           submitText = "Done!";
                         });
-                        Navigator.pop(context);
+                        await state();
+                        void pop() {
+                          Navigator.pop(context);
+                        }
+
+                        pop();
                       }).catchError((_) {
                         setState(() {
                           submitText = "Error";
@@ -215,6 +269,8 @@ class CreateServerState extends State<CreateServer> {
                         Timer(const Duration(seconds: 2), () {
                           setState(() {
                             submitText = "Submit";
+                            servername = "";
+                            skip = false;
                           });
                         });
                       });
@@ -230,7 +286,9 @@ class CreateServerState extends State<CreateServer> {
                   ),
                   backgroundColor: MaterialStateProperty.all(
                       (submitText != "Submit" && submitText != "Checking")
-                          ? Colors.red[500]
+                          ? submitText == "Done!"
+                              ? Colors.green[500]
+                              : Colors.red[500]
                           : Colors.blue),
                 ),
                 child: SizedBox(

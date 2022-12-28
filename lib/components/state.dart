@@ -9,7 +9,7 @@ class StateManager {
   void setState(String key, dynamic value) {
     state.update(
       key,
-      (value) => value,
+      (_) => value,
       ifAbsent: () => value,
     );
   }
@@ -38,14 +38,15 @@ var manager = StateManager();
 var callbacks = [];
 
 Future<void> state() async {
-  Timer.periodic(const Duration(seconds: kIsWeb ? 8 : 2), (_) async {
-    try {
-      var data = await fetchServers();
-      var user = await fetchUser();
+  try {
+    var data = await fetchServers();
+    var user = await fetchUser();
 
-      setDataState("user-servers", data);
-      setDataState("user-limit", user);
-    } catch (_) {}
+    setDataState("user-servers", data);
+    setDataState("user-limit", user);
+  } catch (_) {}
+  Timer(const Duration(seconds: kIsWeb ? 3 : 1), () async {
+    await state();
   });
 }
 
@@ -62,12 +63,14 @@ void unregisterBuild(int buildId) {
 void setDataState(String key, dynamic value) {
   manager.setState(key, value);
 
-  var data = manager.getAll();
-  for (var function in callbacks) {
-    try {
-      function["call"](data);
-    } catch (_) {}
-  }
+  Timer(const Duration(milliseconds: 500), () {
+    var data = manager.getAll();
+    for (var function in callbacks) {
+      try {
+        function["call"](data);
+      } catch (_) {}
+    }
+  });
 }
 
 dynamic getDataState(String key, bool integer) {
