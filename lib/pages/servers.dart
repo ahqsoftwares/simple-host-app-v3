@@ -2,7 +2,6 @@ import 'dart:async';
 
 import "package:flutter/material.dart";
 import 'package:simplehostmobile/data/api/mod.dart';
-import 'package:simplehostmobile/data/api/servers.dart';
 
 import "../components/state.dart";
 import "../components/design.dart";
@@ -80,12 +79,6 @@ class ServersState extends State<Servers> {
               return const InkWell();
             }
           },
-          /*children: [
-            Text(
-              '$count servers',
-              style: const TextStyle(color: Colors.white),
-            ),
-          ],*/
         ),
       ),
       floatingActionButton: count < limit
@@ -150,156 +143,171 @@ class CreateServerState extends State<CreateServer> {
   Widget build(BuildContext context) {
     final GlobalKey<FormState> formKey = GlobalKey<FormState>();
 
-    return Scaffold(
-      bottomNavigationBar: !skip
-          ? Container(
-              height: 50,
-              decoration: const BoxDecoration(
-                color: Color.fromRGBO(0, 0, 0, 0.9),
-              ),
-              child: InkWell(
-                onTap: () {
-                  Navigator.of(context).pop();
-                },
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  children: const [
-                    Padding(
-                      padding: EdgeInsets.fromLTRB(0, 0, 5, 0),
-                      child: Icon(
-                        Icons.arrow_back,
-                        color: Colors.white,
-                      ),
-                    ),
-                    Text(
-                      "Back",
-                      style: TextStyle(
-                        color: Colors.white,
-                      ),
-                    ),
-                  ],
+    return MaterialApp(
+      theme: ThemeData(
+        scaffoldBackgroundColor: const Color.fromARGB(255, 0, 52, 89),
+      ),
+      home: Scaffold(
+        bottomNavigationBar: !skip
+            ? Container(
+                height: 50,
+                decoration: const BoxDecoration(
+                  color: Color.fromARGB(255, 0, 52, 89),
                 ),
-              ),
-            )
-          : null,
-      body: Container(
-        width: MediaQuery.of(context).size.width,
-        height: MediaQuery.of(context).size.height,
-        decoration: const BoxDecoration(
-          image: DecorationImage(
-              image: AssetImage("assets/bg.png"), fit: BoxFit.fill),
-        ),
-        child: Form(
-          key: formKey,
-          child: Column(
-            children: [
-              TextFormField(
-                autocorrect: false,
-                decoration: InputDecoration(
-                    labelText: "Server Name",
-                    icon: width >= 250
-                        ? const Icon(
-                            Icons.storage,
-                            color: Colors.white,
-                          )
-                        : null,
-                    iconColor: Colors.white,
-                    fillColor: Colors.white,
-                    focusColor: Colors.white,
-                    hoverColor: Colors.white,
-                    prefixIconColor: Colors.white,
-                    suffixIconColor: Colors.white),
-                initialValue: servername,
-                onSaved: (value) {
-                  setState(() {
-                    servername = value as String;
-                  });
-                },
-                validator: (value) {
-                  if (value == null) {
-                    return "Please enter a server name";
-                  } else if (value.contains(" ")) {
-                    return "No spaces";
-                  } else if (value.length > 16) {
-                    return "Please be short";
-                  }
-                  bool red = false;
-                  for (var char = 0; char < value.length; char++) {
-                    String chh = value[char];
-                    if (chh.toLowerCase() == chh.toUpperCase()) {
-                      red = true;
-                    }
-                  }
-
-                  if (red) {
-                    return "Only letter are allowed!";
-                  }
-                  return null;
-                },
-              ),
-              Container(
-                height: 80,
-              ),
-              ElevatedButton(
-                onPressed: () {
-                  if (formKey.currentState!.validate()) {
-                    setState(() {
-                      skip = true;
-                    });
-                    formKey.currentState!.save();
-                    Timer(const Duration(milliseconds: 200), () {
-                      setState(() {
-                        submitText = "Checking";
-                      });
-                      makeServer(servername).then((_) async {
-                        setState(() {
-                          submitText = "Done!";
-                        });
-                        await state();
-                        void pop() {
-                          Navigator.pop(context);
-                        }
-
-                        pop();
-                      }).catchError((_) {
-                        setState(() {
-                          submitText = "Error";
-                        });
-                        Timer(const Duration(seconds: 2), () {
-                          setState(() {
-                            submitText = "Submit";
-                            servername = "";
-                            skip = false;
-                          });
-                        });
-                      });
-                    });
-                  }
-                },
-                style: ButtonStyle(
-                  padding: MaterialStateProperty.all(
-                    const EdgeInsets.symmetric(
-                      vertical: 20,
-                      horizontal: 60,
-                    ),
-                  ),
-                  backgroundColor: MaterialStateProperty.all(
-                      (submitText != "Submit" && submitText != "Checking")
-                          ? submitText == "Done!"
-                              ? Colors.green[500]
-                              : Colors.red[500]
-                          : Colors.blue),
-                ),
-                child: SizedBox(
-                  width: 300,
-                  child: Text(
-                    submitText,
-                    textAlign: TextAlign.center,
+                child: InkWell(
+                  onTap: () {
+                    Navigator.of(context).pop();
+                  },
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: const [
+                      Padding(
+                        padding: EdgeInsets.fromLTRB(0, 0, 5, 0),
+                        child: Icon(
+                          Icons.arrow_back,
+                          color: Colors.white,
+                        ),
+                      ),
+                      Text(
+                        "Back",
+                        style: TextStyle(
+                          color: Colors.white,
+                        ),
+                      ),
+                    ],
                   ),
                 ),
               )
-            ],
+            : null,
+        body: Container(
+          alignment: Alignment.center,
+          child: Container(
+            width: width,
+            height: height,
+            padding: const EdgeInsets.all(20),
+            decoration: const BoxDecoration(
+              color: Colors.white,
+              borderRadius: BorderRadius.all(
+                Radius.circular(8),
+              ),
+            ),
+            child: Form(
+              key: formKey,
+              child: Column(
+                children: [
+                  TextFormField(
+                    autocorrect: false,
+                    decoration: InputDecoration(
+                      labelText: "Server Name",
+                      hintStyle: TextStyle(
+                        color: Colors.grey[400],
+                      ),
+                      hintText: "Enter new server name",
+                      icon: width >= 250
+                          ? const Icon(
+                              Icons.storage,
+                            )
+                          : null, /*
+                      iconColor: Colors.white,
+                      fillColor: Colors.white,
+                      focusColor: Colors.white,
+                      hoverColor: Colors.white,
+                      prefixIconColor: Colors.white,
+                      suffixIconColor: Colors.white,*/
+                    ),
+                    initialValue: servername,
+                    onSaved: (value) {
+                      setState(() {
+                        servername = value as String;
+                      });
+                    },
+                    validator: (value) {
+                      if (value == null || value == "") {
+                        return "Please enter a server name";
+                      } else if (value.contains(" ")) {
+                        return "No spaces";
+                      } else if (value.length > 16) {
+                        return "Please be short";
+                      }
+                      bool red = false;
+                      for (var char = 0; char < value.length; char++) {
+                        String chh = value[char];
+                        if (chh.toLowerCase() == chh.toUpperCase()) {
+                          red = true;
+                        }
+                      }
+
+                      if (red) {
+                        return "Only letter are allowed!";
+                      }
+                      return null;
+                    },
+                  ),
+                  Container(
+                    height: 80,
+                  ),
+                  ElevatedButton(
+                    onPressed: () {
+                      if (formKey.currentState!.validate()) {
+                        setState(() {
+                          skip = true;
+                        });
+                        formKey.currentState!.save();
+                        Timer(const Duration(milliseconds: 200), () {
+                          setState(() {
+                            submitText = "Checking";
+                          });
+                          makeServer(servername).then((_) async {
+                            setState(() {
+                              submitText = "Done!";
+                            });
+                            await state();
+                            void pop() {
+                              Navigator.pop(context);
+                            }
+
+                            pop();
+                          }).catchError((_) {
+                            setState(() {
+                              submitText = "Error";
+                            });
+                            Timer(const Duration(seconds: 2), () {
+                              setState(() {
+                                submitText = "Submit";
+                                servername = "";
+                                skip = false;
+                              });
+                            });
+                          });
+                        });
+                      }
+                    },
+                    style: ButtonStyle(
+                      padding: MaterialStateProperty.all(
+                        const EdgeInsets.symmetric(
+                          vertical: 20,
+                          horizontal: 60,
+                        ),
+                      ),
+                      backgroundColor: MaterialStateProperty.all(
+                          (submitText != "Submit" && submitText != "Checking")
+                              ? submitText == "Done!"
+                                  ? Colors.green[500]
+                                  : Colors.red[500]
+                              : Colors.blue),
+                    ),
+                    child: SizedBox(
+                      width: 300,
+                      child: Text(
+                        submitText,
+                        textAlign: TextAlign.center,
+                      ),
+                    ),
+                  )
+                ],
+              ),
+            ),
           ),
         ),
       ),

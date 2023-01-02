@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import "package:flutter/material.dart";
 import 'package:flutter/services.dart';
 import 'package:simplehostmobile/pages/login.dart';
@@ -78,9 +80,23 @@ class _MainState extends State<Main> {
         auth = 1;
       }
       if (auth != authenticated) {
-        setState(() {
-          authenticated = auth;
-        });
+        void set() {
+          setState(() {
+            authenticated = auth;
+          });
+        }
+
+        if (auth == 2) {
+          Timer.periodic(const Duration(seconds: 1), (timer) {
+            var data = getDataState("user-servers", false);
+            if (data != null) {
+              set();
+              timer.cancel();
+            }
+          });
+        } else {
+          set();
+        }
       }
     });
 
