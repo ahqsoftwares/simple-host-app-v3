@@ -122,7 +122,7 @@ class _MainState extends State<Main> {
                           : const Settings(),
                   bottomNavigationBar: BottomNavigationBar(
                     type: BottomNavigationBarType.fixed,
-                    backgroundColor: const Color.fromRGBO(0, 0, 0, 0.905),
+                    backgroundColor: const Color.fromRGBO(25, 25, 24, 1),
                     selectedItemColor: Colors.cyan,
                     unselectedItemColor: Colors.white,
                     items: [

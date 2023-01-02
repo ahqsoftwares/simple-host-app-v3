@@ -57,7 +57,7 @@ class _LoadingState extends State<Loading> {
                 ),
               ),
               show
-                  ? LoadingAnimationWidget.prograssiveDots(
+                  ? LoadingAnimationWidget.staggeredDotsWave(
                       color: const Color.fromRGBO(0, 168, 232, 1),
                       size: 200,
                     )

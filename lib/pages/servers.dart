@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import "package:flutter/material.dart";
+import 'package:simplehostmobile/components/server.dart';
 import 'package:simplehostmobile/data/api/mod.dart';
 
 import "../components/state.dart";
@@ -54,31 +55,27 @@ class ServersState extends State<Servers> {
         decoration: boxDecoration(),
         width: MediaQuery.of(context).size.width,
         height: MediaQuery.of(context).size.height,
-        child: ListView.builder(
-          itemCount: count,
-          itemBuilder: (context, index) {
-            try {
-              var items = getDataState("user-servers", false);
-              var item = items[index];
+        alignment: Alignment.topCenter,
+        // ignore: sized_box_for_whitespace
+        child: Container(
+          width: MediaQuery.of(context).size.width * 98 / 100,
+          child: ListView.builder(
+            itemCount: count,
+            itemBuilder: (context, index) {
+              try {
+                var items = getDataState("user-servers", false);
+                var item = items[index];
 
-              return InkWell(
-                onTap: () {
-                  rmServer(item["name"].toString()).then((value) async {
-                    await state();
-                    print("Good to delete");
-                  });
-                },
-                child: Text(
-                  item["name"].toString(),
-                  style: const TextStyle(
-                    color: Colors.white,
-                  ),
-                ),
-              );
-            } catch (_) {
-              return const InkWell();
-            }
-          },
+                return ServerContainer(
+                  onTap: () {},
+                  labelText: item["name"].toString(),
+                  status: item["status"].toString(),
+                );
+              } catch (_) {
+                return const InkWell();
+              }
+            },
+          ),
         ),
       ),
       floatingActionButton: count < limit
@@ -118,6 +115,7 @@ class CreateServerState extends State<CreateServer> {
   double width = 0;
   double height = 0;
   String submitText = "Submit";
+  String status = "Submit";
   String servername = "";
 
   bool skip = false;
@@ -179,7 +177,9 @@ class CreateServerState extends State<CreateServer> {
                   ),
                 ),
               )
-            : null,
+            : Container(
+                height: 50,
+              ),
         body: Container(
           alignment: Alignment.center,
           child: Container(
@@ -208,13 +208,7 @@ class CreateServerState extends State<CreateServer> {
                           ? const Icon(
                               Icons.storage,
                             )
-                          : null, /*
-                      iconColor: Colors.white,
-                      fillColor: Colors.white,
-                      focusColor: Colors.white,
-                      hoverColor: Colors.white,
-                      prefixIconColor: Colors.white,
-                      suffixIconColor: Colors.white,*/
+                          : null,
                     ),
                     initialValue: servername,
                     onSaved: (value) {
@@ -227,7 +221,7 @@ class CreateServerState extends State<CreateServer> {
                         return "Please enter a server name";
                       } else if (value.contains(" ")) {
                         return "No spaces";
-                      } else if (value.length > 16) {
+                      } else if (value.length > 32) {
                         return "Please be short";
                       }
                       bool red = false;
@@ -239,7 +233,7 @@ class CreateServerState extends State<CreateServer> {
                       }
 
                       if (red) {
-                        return "Only letter are allowed!";
+                        return "Only letters are allowed!";
                       }
                       return null;
                     },
@@ -249,38 +243,44 @@ class CreateServerState extends State<CreateServer> {
                   ),
                   ElevatedButton(
                     onPressed: () {
-                      if (formKey.currentState!.validate()) {
+                      if (status == "Submit") {
                         setState(() {
-                          skip = true;
+                          status = "Busy";
                         });
-                        formKey.currentState!.save();
-                        Timer(const Duration(milliseconds: 200), () {
+                        if (formKey.currentState!.validate()) {
                           setState(() {
-                            submitText = "Checking";
+                            skip = true;
                           });
-                          makeServer(servername).then((_) async {
+                          formKey.currentState!.save();
+                          Timer(const Duration(milliseconds: 200), () {
                             setState(() {
-                              submitText = "Done!";
+                              submitText = "Checking";
                             });
-                            await state();
-                            void pop() {
-                              Navigator.pop(context);
-                            }
-
-                            pop();
-                          }).catchError((_) {
-                            setState(() {
-                              submitText = "Error";
-                            });
-                            Timer(const Duration(seconds: 2), () {
+                            makeServer(servername).then((_) async {
                               setState(() {
-                                submitText = "Submit";
-                                servername = "";
-                                skip = false;
+                                submitText = "Done!";
+                              });
+                              await state();
+                              void pop() {
+                                Navigator.pop(context);
+                              }
+
+                              pop();
+                            }).catchError((_) {
+                              setState(() {
+                                submitText = "Error";
+                              });
+                              Timer(const Duration(seconds: 2), () {
+                                setState(() {
+                                  submitText = "Submit";
+                                  status = "Submit";
+                                  servername = "";
+                                  skip = false;
+                                });
                               });
                             });
                           });
-                        });
+                        }
                       }
                     },
                     style: ButtonStyle(
