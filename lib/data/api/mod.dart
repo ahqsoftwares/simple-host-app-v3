@@ -91,6 +91,10 @@ Future<bool> verify() async {
   )
       .then((response) {
     if (response.statusCode == 200) {
+      var mockPassword = jsonDecode(response.body).toString();
+      if (mockPassword != "Ok") {
+        password = mockPassword;
+      }
       changeLoggedInStatus(true);
     } else {
       changeLoggedInStatus(false);
