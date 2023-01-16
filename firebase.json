@@ -13,19 +13,5 @@
         "destination": "/index.html"
       }
     ]
-  }, {
-    "target": "downloads-74868",
-    "public": "docs/dist",
-    "ignore": [
-      "firebase.json",
-      "**/.*",
-      "**/node_modules/**"
-    ],
-    "rewrites": [
-      {
-        "source": "**",
-        "destination": "/index.html"
-      }
-    ]
   }]
 }
