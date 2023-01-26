@@ -70,7 +70,7 @@ class ServersState extends State<Servers> {
                   onTap: () {
                     Navigator.of(context).push(MaterialPageRoute(
                       builder: (_) => const Server(),
-                    ));
+                    ),);
                   },
                   labelText: item["name"].toString(),
                   status: item["status"].toString(),

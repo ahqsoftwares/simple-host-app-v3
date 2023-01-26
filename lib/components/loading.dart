@@ -23,9 +23,11 @@ class _LoadingState extends State<Loading> {
   void initState() {
     super.initState();
     Timer(const Duration(seconds: 2), () {
-      setState(() {
-        show = true;
-      });
+      try {
+        setState(() {
+          show = true;
+        });
+      } catch (_) {}
     });
   }
 

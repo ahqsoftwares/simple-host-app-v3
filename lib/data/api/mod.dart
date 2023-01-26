@@ -100,6 +100,8 @@ Future<bool> verify() async {
       changeLoggedInStatus(false);
     }
   }).catchError((e) {
+    // ignore: avoid_print
+    print(e);
     changeLoggedInStatus(false);
   });
 

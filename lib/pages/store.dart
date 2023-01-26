@@ -2,14 +2,14 @@ import "package:flutter/material.dart";
 
 import "../components/design.dart";
 
-class Settings extends StatefulWidget {
-  const Settings({Key? key}) : super(key: key);
+class MarketPlace extends StatefulWidget {
+  const MarketPlace({Key? key}) : super(key: key);
 
   @override
-  SettingsState createState() => SettingsState();
+  MarketPlaceState createState() => MarketPlaceState();
 }
 
-class SettingsState extends State<Settings> {
+class MarketPlaceState extends State<MarketPlace> {
   double width = 0;
   double height = 0;
 

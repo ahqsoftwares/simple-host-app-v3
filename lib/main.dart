@@ -6,7 +6,7 @@ import 'package:simplehostmobile/pages/login.dart';
 
 import "pages/account.dart";
 import "pages/servers.dart";
-import "pages/settings.dart";
+import 'pages/store.dart';
 
 import "data/api/mod.dart";
 import 'components/database.dart';
@@ -119,7 +119,7 @@ class _MainState extends State<Main> {
                       ? const Servers()
                       : current == 1
                           ? const Account()
-                          : const Settings(),
+                          : const MarketPlace(),
                   bottomNavigationBar: BottomNavigationBar(
                     type: BottomNavigationBarType.fixed,
                     backgroundColor: const Color.fromRGBO(25, 25, 24, 1),
@@ -137,8 +137,8 @@ class _MainState extends State<Main> {
                         backgroundColor: Colors.green[600],
                       ),
                       BottomNavigationBarItem(
-                        icon: const Icon(Icons.settings),
-                        label: "Settings",
+                        icon: const Icon(Icons.storefront),
+                        label: "Market",
                         backgroundColor: Colors.blue[600],
                       )
                     ],
