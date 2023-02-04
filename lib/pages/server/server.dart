@@ -1,5 +1,9 @@
 import "package:flutter/material.dart";
 
+import 'package:simplehostmobile/pages/server/console.dart';
+import 'package:simplehostmobile/pages/server/files.dart';
+import 'package:simplehostmobile/pages/server/settings.dart';
+
 class Server extends StatefulWidget {
   const Server({Key? key}) : super(key: key);
 
@@ -7,30 +11,52 @@ class Server extends StatefulWidget {
   ServerState createState() => ServerState();
 }
 
-class ServerState extends State<Server> {
+class ServerState extends State<Server> with TickerProviderStateMixin {
+  late TabController _tabController;
+
+  @override
+  void initState() {
+    super.initState();
+    _tabController = TabController(length: 3, vsync: this);
+  }
+
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
       theme: ThemeData(
-        scaffoldBackgroundColor: const Color.fromARGB(255, 0, 52, 89),
+        scaffoldBackgroundColor: Colors.black,
       ),
       home: DefaultTabController(
         length: 3,
         child: Scaffold(
           appBar: AppBar(
-            title: const TabBar(
-              tabs: [
-                Tab(text: "Console", icon: Icon(Icons.terminal)),
-                Tab(text: "Files", icon: Icon(Icons.folder)),
-                Tab(text: "Settings", icon: Icon(Icons.settings)),
-              ],
+            backgroundColor: const Color.fromRGBO(25, 25, 24, 1),
+            title: TabBar(
+              /*backgroundColor: const Color.fromRGBO(25, 25, 24, 1),*/
+              labelColor: Colors.cyan,
+              unselectedLabelColor: Colors.white,
+              controller: _tabController,
+              tabs: MediaQuery.of(context).size.width < 500
+                  ? const [
+                      Tab(icon: Icon(Icons.terminal)),
+                      Tab(icon: Icon(Icons.folder)),
+                      Tab(icon: Icon(Icons.settings)),
+                    ]
+                  : const [
+                      Tab(text: "Console", icon: Icon(Icons.terminal)),
+                      Tab(text: "Files", icon: Icon(Icons.folder)),
+                      Tab(text: "Settings", icon: Icon(Icons.settings)),
+                    ],
             ),
           ),
           body: Column(
             crossAxisAlignment: CrossAxisAlignment.stretch,
             children: [
               Expanded(
-                child: Container(),
+                child: TabBarView(
+                  controller: _tabController,
+                  children: const [Console(), Files(), Settings()],
+                ),
               ),
               InkWell(
                 child: Container(

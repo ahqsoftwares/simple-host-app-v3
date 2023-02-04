@@ -63,6 +63,7 @@ class Main extends StatefulWidget {
 class _MainState extends State<Main> {
   int current = 0;
   int authenticated = 0; //0: waiting, 1: no, 2: yes
+  int update = 0; //0: waiting; 1: no; 2: yes
   Map<String, dynamic> userData = {
     "name": "",
     "servers": [],
@@ -71,6 +72,16 @@ class _MainState extends State<Main> {
   @override
   void initState() {
     super.initState();
+
+    registerBuild((data) {
+      var updateAvailable = int.tryParse(data["update"].toString());
+
+      if (updateAvailable != null) {
+        setState(() {
+          update = updateAvailable;
+        });
+      }
+    });
 
     updateMe((online) {
       int auth = 0;
@@ -106,7 +117,7 @@ class _MainState extends State<Main> {
   @override
   Widget build(BuildContext context) {
     precacheImage(const AssetImage("assets/bg.png"), context);
-    return authenticated == 0
+    return (authenticated == 0 || update == 0 || update == 2)
         ? const Loading(key: Key("Loading"))
         : authenticated == 1
             ? const Login()
@@ -140,7 +151,7 @@ class _MainState extends State<Main> {
                         icon: const Icon(Icons.storefront),
                         label: "Market",
                         backgroundColor: Colors.blue[600],
-                      )
+                      ),
                     ],
                     iconSize: 24,
                     currentIndex: current,

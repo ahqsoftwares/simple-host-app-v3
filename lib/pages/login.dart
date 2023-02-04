@@ -13,8 +13,6 @@ class Login extends StatefulWidget {
 }
 
 class _LoginState extends State<Login> {
-  double width = 0;
-  double height = 0;
   String submitText = "Submit";
   String uid = "";
   String password = "";
@@ -22,22 +20,19 @@ class _LoginState extends State<Login> {
   @override
   void initState() {
     super.initState();
-    setState(() {
-      width = (MediaQueryData.fromWindow(WidgetsBinding.instance.window)
-                  .size
-                  .width *
-              80) /
-          100;
-      height = (MediaQueryData.fromWindow(WidgetsBinding.instance.window)
-                  .size
-                  .height *
-              80) /
-          100;
-    });
   }
 
   @override
   Widget build(BuildContext context) {
+    double width =
+        (MediaQueryData.fromWindow(WidgetsBinding.instance.window).size.width *
+                80) /
+            100;
+    double height =
+        (MediaQueryData.fromWindow(WidgetsBinding.instance.window).size.height *
+                80) /
+            100;
+
     final GlobalKey<FormState> formKey = GlobalKey<FormState>();
 
     return MaterialApp(

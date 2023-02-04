@@ -107,7 +107,26 @@ class AccountState extends State<Account> {
             ),
           ),
           Information(
-            child: const Text("hi"),
+            child: Flex(
+              direction: isScreenWide ? Axis.horizontal : Axis.vertical,
+              mainAxisAlignment: isScreenWide
+                  ? MainAxisAlignment.start
+                  : MainAxisAlignment.center,
+              crossAxisAlignment: isScreenWide
+                  ? CrossAxisAlignment.start
+                  : CrossAxisAlignment.center,
+              children: [
+                const Icon(
+                  Icons.trending_up_rounded,
+                  color: Colors.white,
+                  size: 100,
+                ),
+                Padding(
+                  padding: EdgeInsets.fromLTRB(isScreenWide ? 20 : 0, 0, 0, 0),
+                  child: Column(),
+                ),
+              ],
+            ),
           ),
         ],
       ),
