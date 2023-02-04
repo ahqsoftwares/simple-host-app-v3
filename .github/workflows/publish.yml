@@ -106,4 +106,4 @@ jobs:
           allowUpdates: true
           draft: true
           tag: "v${{ steps.yaml-data.outputs.data }}"
-          artifacts: "macos.zip"
+          artifacts: "build/macos.zip"
