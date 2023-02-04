@@ -72,6 +72,10 @@ jobs:
       - name: Build Macos Apps
         if: runner.os == 'Macos'
         run: flutter build macos
+    
+      - name: Build iOS Apps
+        if: runner.os == 'Macos'
+        run: flutter build ios
 
       - name: Release
         uses: ncipollo/release-action@v1
