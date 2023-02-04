@@ -70,7 +70,7 @@ jobs:
         run: cd ./build/linux && zip -r linux.zip .
 
       - name: Build Macos Apps
-        if: runner.os == 'Mac'
+        if: runner.os == 'Macos'
         run: flutter build macos
 
       - name: Release
