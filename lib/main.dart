@@ -41,7 +41,7 @@ class _MainState extends State<Main> with TickerProviderStateMixin {
       : getDataState("user-servers", false)!.length;
 
   int authenticated = 0; //0: waiting, 1: no, 2: yes
-  int update = 0; //0: waiting; 1: no; 2: yes
+  int update = 1; //0: waiting; 1: no; 2: yes
   Map<String, dynamic> userData = {
     "name": "",
     "servers": [],
@@ -63,19 +63,18 @@ class _MainState extends State<Main> with TickerProviderStateMixin {
     );
 
     registerBuild((data) {
-      var updateAvailable = int.tryParse(data["update"].toString());
+      var updateAvailable = int.parse(data["update"].toString());
 
-      if (updateAvailable != null) {
-        setState(() {
-          count = data["user-servers"].length;
-          limit = data["user-limit"]["slots"];
-          update = updateAvailable;
-        });
-      }
+      setState(() {
+        count = data["user-servers"].length;
+        limit = data["user-limit"]["slots"];
+        update = updateAvailable;
+      });
     });
 
     updateMe((online) {
       int auth = 0;
+
       if (online) {
         auth = 2;
       } else {

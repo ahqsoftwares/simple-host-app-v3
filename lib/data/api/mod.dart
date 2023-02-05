@@ -66,6 +66,11 @@ Future<bool> verifyExisting() async {
   userId = getData("x-uid");
   password = getData("x-password");
 
+  if (userId == "" || password == "") {
+    changeLoggedInStatus(false);
+    return false;
+  }
+
   return await verify();
 }
 

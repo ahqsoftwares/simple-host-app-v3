@@ -34,45 +34,46 @@ class _LoadingState extends State<Loading> {
     Future<void> checkForUpdates() async {
       bool updateAvailableRn = false;
 
-      PackageInfo packageInfo = await PackageInfo.fromPlatform();
-      var currentVersion = "v${packageInfo.version}+${packageInfo.buildNumber}";
+      if (!kIsWeb) {
+        PackageInfo packageInfo = await PackageInfo.fromPlatform();
+        var currentVersion =
+            "v${packageInfo.version}+${packageInfo.buildNumber}";
 
-      await get(
-        Uri(
-          host: "api.github.com",
-          scheme: "https",
-          path: !kIsWeb && Platform.isWindows
-              ? "repos/ahqsoftwares/ahq-store-data/commits"
-              : "repos/ahqsoftwares/simple-host-app-v3/releases/latest",
-        ),
-      ).then((response) async {
-        if (!kIsWeb && Platform.isWindows) {
-          var body = jsonDecode(response.body)[0]?["sha"].toString();
+        await get(
+          Uri(
+            host: "api.github.com",
+            scheme: "https",
+            path: Platform.isWindows
+                ? "repos/ahqsoftwares/ahq-store-data/commits"
+                : "repos/ahqsoftwares/simple-host-app-v3/releases/latest",
+          ),
+        ).then((response) async {
+          if (Platform.isWindows) {
+            var body = jsonDecode(response.body)[0]?["sha"].toString();
 
-          await get(
-            Uri(
-              host: "rawcdn.githack.com",
-              scheme: "https",
-              path:
-                  'ahqsoftwares/ahq-store-data/$body/database/C3J2k2OnXv7ZfvFAnyYv.json',
-            ),
-          ).then((data) async {
-            var version = jsonDecode(data.body)?["version"]?.toString();
+            await get(
+              Uri(
+                host: "rawcdn.githack.com",
+                scheme: "https",
+                path:
+                    'ahqsoftwares/ahq-store-data/$body/database/C3J2k2OnXv7ZfvFAnyYv.json',
+              ),
+            ).then((data) async {
+              var version = jsonDecode(data.body)?["version"]?.toString();
+
+              updateAvailableRn = currentVersion != version;
+            }).catchError((_) async {
+              updateAvailableRn = false;
+            });
+          } else {
+            var version = jsonDecode(response.body)["tag_name"]?.toString();
 
             updateAvailableRn = currentVersion != version;
-          }).catchError((_) async {
-            updateAvailableRn = false;
-          });
-        } else if (!kIsWeb) {
-          var version = jsonDecode(response.body)["tag_name"]?.toString();
-
-          updateAvailableRn = currentVersion != version;
-        } else {
+          }
+        }).catchError((_) {
           updateAvailableRn = false;
-        }
-      }).catchError((_) {
-        updateAvailableRn = false;
-      });
+        });
+      }
 
       setDataState("update", updateAvailableRn ? "2" : "1");
       setState(() {
