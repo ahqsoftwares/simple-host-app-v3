@@ -13,41 +13,10 @@ import 'components/database.dart';
 import "components/state.dart";
 import "components/loading.dart";
 
-/*
-void useAds(AdRequest request) {
-  InterstitialAd.load(
-    adUnitId: "ca-app-pub-9599761542257130/7875846393",
-    request: request,
-    adLoadCallback: InterstitialAdLoadCallback(
-      onAdLoaded: (InterstitialAd ad) {
-        ad.fullScreenContentCallback = FullScreenContentCallback(
-          onAdShowedFullScreenContent: (InterstitialAd ad) {
-            ad.show().then((_) {}).catchError((_) {});
-          },
-          onAdDismissedFullScreenContent: (InterstitialAd ad) {
-            ad.dispose();
-          },
-          onAdFailedToShowFullScreenContent: (InterstitialAd ad, _) {
-            ad.dispose();
-          },
-        );
-      },
-      onAdFailedToLoad: (_) {},
-    ),
-  );
-}
-*/
-
 void main() {
   WidgetsFlutterBinding.ensureInitialized();
   init();
   state();
-
-  //if (defaultTargetPlatform == TargetPlatform.android) {
-  //MobileAds.instance.initialize();
-  //var request = const AdRequest();
-  //useAds(request);
-  //}
 
   SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp])
       .then((_) => runApp(const Main()));
@@ -60,8 +29,17 @@ class Main extends StatefulWidget {
   State<Main> createState() => _MainState();
 }
 
-class _MainState extends State<Main> {
-  int current = 0;
+class _MainState extends State<Main> with TickerProviderStateMixin {
+  late TabController _tabController;
+
+  int limit = getDataState("user-limit", false) == null
+      ? 0
+      : getDataState("user-limit", false)!["slots"];
+
+  int count = getDataState("user-servers", false) == null
+      ? 0
+      : getDataState("user-servers", false)!.length;
+
   int authenticated = 0; //0: waiting, 1: no, 2: yes
   int update = 0; //0: waiting; 1: no; 2: yes
   Map<String, dynamic> userData = {
@@ -72,12 +50,25 @@ class _MainState extends State<Main> {
   @override
   void initState() {
     super.initState();
+    double width =
+        (MediaQueryData.fromWindow(WidgetsBinding.instance.window).size.width *
+                80) /
+            100;
+
+    _tabController = TabController(
+      length: 3,
+      animationDuration:
+          width > 500 ? kTabScrollDuration : const Duration(milliseconds: 125),
+      vsync: this,
+    );
 
     registerBuild((data) {
       var updateAvailable = int.tryParse(data["update"].toString());
 
       if (updateAvailable != null) {
         setState(() {
+          count = data["user-servers"].length;
+          limit = data["user-limit"]["slots"];
           update = updateAvailable;
         });
       }
@@ -126,43 +117,36 @@ class _MainState extends State<Main> {
                 title: "Simple Host",
                 theme: ThemeData.light(),
                 home: Scaffold(
-                  body: current == 0
-                      ? const Servers()
-                      : current == 1
-                          ? const Account()
-                          : const MarketPlace(),
-                  bottomNavigationBar: BottomNavigationBar(
-                    type: BottomNavigationBarType.fixed,
-                    backgroundColor: const Color.fromRGBO(25, 25, 24, 1),
-                    selectedItemColor: Colors.cyan,
-                    unselectedItemColor: Colors.white,
-                    items: [
-                      BottomNavigationBarItem(
-                        icon: const Badge(
-                          backgroundColor: Colors.red,
-                          child: Icon(Icons.storage_rounded),
+                  backgroundColor: const Color.fromRGBO(25, 25, 24, 1),
+                  body: TabBarView(
+                    controller: _tabController,
+                    children: const [
+                      Servers(),
+                      Account(),
+                      MarketPlace(),
+                    ],
+                  ),
+                  bottomNavigationBar: TabBar(
+                    labelColor: Colors.cyan,
+                    unselectedLabelColor: Colors.white,
+                    tabs: [
+                      const Tab(
+                        icon: Icon(Icons.storage_rounded),
+                        text: "Servers",
+                      ),
+                      Tab(
+                        icon: Badge(
+                          smallSize: count >= (limit * 0.75) ? 10 : 0,
+                          child: const Icon(Icons.account_circle_rounded),
                         ),
-                        label: "Servers",
-                        backgroundColor: Colors.red[600],
+                        text: "Account",
                       ),
-                      BottomNavigationBarItem(
-                        icon: const Icon(Icons.home),
-                        label: "Account",
-                        backgroundColor: Colors.green[600],
-                      ),
-                      BottomNavigationBarItem(
-                        icon: const Icon(Icons.storefront),
-                        label: "Market",
-                        backgroundColor: Colors.blue[600],
+                      const Tab(
+                        icon: Icon(Icons.storefront),
+                        text: "Market",
                       ),
                     ],
-                    iconSize: 24,
-                    currentIndex: current,
-                    onTap: ((value) {
-                      setState(() {
-                        current = value;
-                      });
-                    }),
+                    controller: _tabController,
                   ),
                 ),
               );

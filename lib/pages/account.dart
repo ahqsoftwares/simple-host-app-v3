@@ -89,7 +89,7 @@ class AccountState extends State<Account> {
                             ),
                             Padding(
                               padding: const EdgeInsets.fromLTRB(3, 0, 0, 0),
-                              child: Text(
+                              child: SelectableText(
                                 '${userData?["email"].toString()}',
                                 style: const TextStyle(
                                   color: Colors.white,

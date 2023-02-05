@@ -31,7 +31,7 @@ class _LoadingState extends State<Loading> {
   void initState() {
     super.initState();
 
-    void checkForUpdates() async {
+    Future<void> checkForUpdates() async {
       bool updateAvailableRn = false;
 
       PackageInfo packageInfo = await PackageInfo.fromPlatform();
@@ -41,12 +41,12 @@ class _LoadingState extends State<Loading> {
         Uri(
           host: "api.github.com",
           scheme: "https",
-          path: Platform.isWindows
+          path: !kIsWeb && Platform.isWindows
               ? "repos/ahqsoftwares/ahq-store-data/commits"
               : "repos/ahqsoftwares/simple-host-app-v3/releases/latest",
         ),
       ).then((response) async {
-        if (Platform.isWindows) {
+        if (!kIsWeb && Platform.isWindows) {
           var body = jsonDecode(response.body)[0]?["sha"].toString();
 
           await get(
@@ -80,7 +80,12 @@ class _LoadingState extends State<Loading> {
       });
     }
 
-    checkForUpdates();
+    checkForUpdates().catchError((_) {
+      setDataState("update", "1");
+      setState(() {
+        updateAvailable = false;
+      });
+    });
 
     Timer(const Duration(seconds: 2), () {
       try {
