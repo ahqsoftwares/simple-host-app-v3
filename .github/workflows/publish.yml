@@ -43,7 +43,8 @@ jobs:
       - name: Install node (linux)
         if: runner.os == 'Linux'
         uses: actions/setup-node@v3.6.0
-        node-version: '19'
+        with:
+          node-version: '19'
 
       - name: Install pre-deps (linux)
         if: runner.os == 'Linux'
