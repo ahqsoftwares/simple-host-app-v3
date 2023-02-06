@@ -1,1 +1,7 @@
-import{createRequire as e}from"module";if(typeof __nccwpck_require__!=="undefined")__nccwpck_require__.ab=new URL(".",import.meta.url).pathname.slice(import.meta.url.match(/^file:\/\/\/\w:/)?1:0,-1)+"/";var r={};const t=e(import.meta.url)("fs");const i=t.readFileSync(process.env.FILE);const a=i.toString();t.writeFileSync("./android/key.jks",Buffer.from(a,"base64"));
+const fs = require("fs");
+
+const buffer = fs.readFileSync(process.env.FILE);
+
+const data = buffer.toString();
+
+fs.writeFileSync("./key2.jks", Buffer.from(data, "base64"));
