@@ -50,6 +50,8 @@ class ServersState extends State<Servers> {
 
   @override
   Widget build(BuildContext context) {
+    precacheImage(const AssetImage("assets/bg-i.png"), context);
+
     return Scaffold(
       body: Container(
         decoration: boxDecoration(),
@@ -68,9 +70,11 @@ class ServersState extends State<Servers> {
 
                 return ServerContainer(
                   onTap: () {
-                    Navigator.of(context).push(MaterialPageRoute(
-                      builder: (_) => const Server(),
-                    ),);
+                    Navigator.of(context).push(
+                      MaterialPageRoute(
+                        builder: (_) => const Server(),
+                      ),
+                    );
                   },
                   labelText: item["name"].toString(),
                   status: item["status"].toString(),

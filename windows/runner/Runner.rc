@@ -89,11 +89,11 @@ BEGIN
     BEGIN
         BLOCK "040904e4"
         BEGIN
-            VALUE "CompanyName", "com.example" "\0"
-            VALUE "FileDescription", "The official Simple Host App" "\0"
+            VALUE "CompanyName", "com.ahqsoftwares" "\0"
+            VALUE "FileDescription", "Simple Host" "\0"
             VALUE "FileVersion", VERSION_AS_STRING "\0"
             VALUE "InternalName", "simplehost" "\0"
-            VALUE "LegalCopyright", "Copyright (C) 2022 com.example. All rights reserved." "\0"
+            VALUE "LegalCopyright", "Copyright (C) 2022 com.ahqsoftwares. All rights reserved." "\0"
             VALUE "OriginalFilename", "simplehostmobile.exe" "\0"
             VALUE "ProductName", "Simple Host Desktop" "\0"
             VALUE "ProductVersion", VERSION_AS_STRING "\0"

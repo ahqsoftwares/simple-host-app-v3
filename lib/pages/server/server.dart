@@ -17,12 +17,23 @@ class ServerState extends State<Server> with TickerProviderStateMixin {
   @override
   void initState() {
     super.initState();
-    _tabController = TabController(length: 3, vsync: this);
+    double width =
+        (MediaQueryData.fromWindow(WidgetsBinding.instance.window).size.width *
+                80) /
+            100;
+
+    _tabController = TabController(
+      length: 3,
+      vsync: this,
+      animationDuration:
+          width > 500 ? kTabScrollDuration : const Duration(milliseconds: 125),
+    );
   }
 
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
+      debugShowCheckedModeBanner: false,
       theme: ThemeData(
         scaffoldBackgroundColor: Colors.black,
       ),
@@ -32,8 +43,7 @@ class ServerState extends State<Server> with TickerProviderStateMixin {
           appBar: AppBar(
             backgroundColor: const Color.fromRGBO(25, 25, 24, 1),
             title: TabBar(
-              /*backgroundColor: const Color.fromRGBO(25, 25, 24, 1),*/
-              labelColor: Colors.cyan,
+              labelColor: Colors.green[500],
               unselectedLabelColor: Colors.white,
               controller: _tabController,
               tabs: MediaQuery.of(context).size.width < 500
@@ -49,42 +59,50 @@ class ServerState extends State<Server> with TickerProviderStateMixin {
                     ],
             ),
           ),
-          body: Column(
-            crossAxisAlignment: CrossAxisAlignment.stretch,
-            children: [
-              Expanded(
-                child: TabBarView(
-                  controller: _tabController,
-                  children: const [Console(), Files(), Settings()],
-                ),
+          body: Container(
+            decoration: const BoxDecoration(
+              image: DecorationImage(
+                image: AssetImage("assets/bg-i.png"),
+                fit: BoxFit.fill,
               ),
-              InkWell(
-                child: Container(
-                  height: 50,
-                  alignment: Alignment.center,
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    children: const [
-                      Padding(
-                        padding: EdgeInsets.fromLTRB(0, 0, 5, 0),
-                        child: Icon(
-                          Icons.arrow_back,
-                          color: Colors.white,
-                        ),
-                      ),
-                      Text(
-                        "Back",
-                        style: TextStyle(
-                          color: Colors.white,
-                        ),
-                      ),
-                    ],
+            ),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.stretch,
+              children: [
+                Expanded(
+                  child: TabBarView(
+                    controller: _tabController,
+                    children: const [Console(), Files(), Settings()],
                   ),
                 ),
-                onTap: () => Navigator.pop(context),
-              ),
-            ],
+                InkWell(
+                  child: Container(
+                    height: 50,
+                    alignment: Alignment.center,
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      children: const [
+                        Padding(
+                          padding: EdgeInsets.fromLTRB(0, 0, 5, 0),
+                          child: Icon(
+                            Icons.arrow_back,
+                            color: Colors.white,
+                          ),
+                        ),
+                        Text(
+                          "Back",
+                          style: TextStyle(
+                            color: Colors.white,
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                  onTap: () => Navigator.pop(context),
+                ),
+              ],
+            ),
           ),
         ),
       ),
